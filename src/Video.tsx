@@ -40,6 +40,7 @@ const Intro: React.FC = () => {
           width: 650,
           transform: `scale(${logoScale})`,
           opacity: logoOpacity,
+          filter: "drop-shadow(0 0 15px rgba(255,255,255,0.8)) drop-shadow(0 0 30px rgba(255,255,255,0.4))",
         }}
       />
     </AbsoluteFill>
@@ -383,6 +384,7 @@ const Outro: React.FC = () => {
           opacity: logoOpacity,
           transform: `translate(${logoX}px, ${logoY}px) scale(${logoScale})`,
           marginBottom: 30,
+          filter: "drop-shadow(0 0 15px rgba(255,255,255,0.8)) drop-shadow(0 0 30px rgba(255,255,255,0.4))",
         }}
       />
 
