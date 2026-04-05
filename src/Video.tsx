@@ -16,13 +16,13 @@ const CREAM = "#f5f0e8";
 const BROWN = "#1a0a00";
 const ORANGE = "#d4740a";
 
-/* ── Scene 1: Intro (0–90, 3s) – Logo Animation ── */
+/* ── Scene 1: Intro (0–45, 1.5s) – Logo Animation ── */
 const Intro: React.FC = () => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
 
-  const logoScale = spring({ frame, fps, config: { damping: 12 } });
-  const logoOpacity = interpolate(frame, [0, 15], [0, 1], {
+  const logoScale = spring({ frame, fps, config: { damping: 10, mass: 0.8 } });
+  const logoOpacity = interpolate(frame, [0, 10], [0, 1], {
     extrapolateRight: "clamp",
   });
 
@@ -40,6 +40,7 @@ const Intro: React.FC = () => {
           width: 650,
           transform: `scale(${logoScale})`,
           opacity: logoOpacity,
+          filter: "brightness(0) invert(1)",
         }}
       />
     </AbsoluteFill>
@@ -226,12 +227,15 @@ const ProductList: React.FC<{
   );
 };
 
-/* ── Scene 6: USPs (3s) ── */
+/* ── Scene 7: USPs (4s) ── */
 const usps = [
+  "Persönlicher Ansprechpartner",
   "Im Osten Hamburgs",
   "Lieferung binnen 24h",
   "Zuverlässig & pünktlich",
-  "Top Preis-Leistung",
+  "Faires Preis-Leistungs-Verhältnis",
+  "Über 15 Jahre Erfahrung",
+  "Flexible Containergrößen",
 ];
 
 const USPs: React.FC = () => {
@@ -267,15 +271,15 @@ const USPs: React.FC = () => {
         style={{
           display: "flex",
           flexDirection: "column",
-          gap: 30,
+          gap: 22,
           width: "100%",
           padding: "0 60px",
         }}
       >
         {usps.map((usp, i) => {
-          const delay = i * 8;
+          const delay = i * 7;
           const s = spring({
-            frame: Math.max(0, frame - delay - 8),
+            frame: Math.max(0, frame - delay - 6),
             fps,
             config: { damping: 12 },
           });
@@ -286,15 +290,15 @@ const USPs: React.FC = () => {
               style={{
                 display: "flex",
                 alignItems: "center",
-                gap: 24,
+                gap: 20,
                 transform: `scale(${s})`,
                 opacity: s,
               }}
             >
               <div
                 style={{
-                  width: 20,
-                  height: 20,
+                  width: 18,
+                  height: 18,
                   borderRadius: "50%",
                   backgroundColor: LIGHT_GREEN,
                   flexShrink: 0,
@@ -304,7 +308,7 @@ const USPs: React.FC = () => {
                 style={{
                   fontFamily: "Arial, Helvetica, sans-serif",
                   fontWeight: 700,
-                  fontSize: 46,
+                  fontSize: 40,
                   color: BROWN,
                 }}
               >
@@ -366,6 +370,7 @@ const Outro: React.FC = () => {
           opacity: logoOpacity,
           transform: `translate(${logoX}px, ${logoY}px) scale(${logoScale})`,
           marginBottom: 40,
+          filter: "brightness(0) invert(1)",
         }}
       />
 
@@ -430,28 +435,28 @@ const schuettgutProducts = [
 ];
 
 /* ── Main Composition ──
-   Scene 1: Intro           0–90    (3s)
-   Scene 2: Tagline         90–165  (2.5s)
-   Scene 3: Abfall Header   165–210 (1.5s)
-   Scene 4: Abfall Produkte 210–390 (6s)
-   Scene 5: Schüttgut Head  390–435 (1.5s)
-   Scene 6: Schüttgut Prod  435–615 (6s)
-   Scene 7: USPs            615–705 (3s)
-   Scene 8: Outro           705–795 (3s)
-   Total: 795 frames = 26.5s @ 30fps
+   Scene 1: Intro           0–45    (1.5s)
+   Scene 2: Tagline         45–120  (2.5s)
+   Scene 3: Abfall Header   120–165 (1.5s)
+   Scene 4: Abfall Produkte 165–345 (6s)
+   Scene 5: Schüttgut Head  345–390 (1.5s)
+   Scene 6: Schüttgut Prod  390–570 (6s)
+   Scene 7: USPs            570–690 (4s)
+   Scene 8: Outro           690–780 (3s)
+   Total: 780 Frames = 26s @ 30fps
 ── */
 export const RieprechtVideo: React.FC = () => {
   return (
     <AbsoluteFill style={{ backgroundColor: DARK_GREEN }}>
-      <Sequence from={0} durationInFrames={90}>
+      <Sequence from={0} durationInFrames={45}>
         <Intro />
       </Sequence>
 
-      <Sequence from={90} durationInFrames={75}>
+      <Sequence from={45} durationInFrames={75}>
         <Tagline />
       </Sequence>
 
-      <Sequence from={165} durationInFrames={45}>
+      <Sequence from={120} durationInFrames={45}>
         <CategoryHeader
           title="Abfallentsorgung"
           count={10}
@@ -462,7 +467,7 @@ export const RieprechtVideo: React.FC = () => {
         />
       </Sequence>
 
-      <Sequence from={210} durationInFrames={180}>
+      <Sequence from={165} durationInFrames={180}>
         <ProductList
           products={abfallProducts}
           bgColor={DARK_GREEN}
@@ -471,7 +476,7 @@ export const RieprechtVideo: React.FC = () => {
         />
       </Sequence>
 
-      <Sequence from={390} durationInFrames={45}>
+      <Sequence from={345} durationInFrames={45}>
         <CategoryHeader
           title={"Schüttgüter &\nBaustoffe"}
           count={10}
@@ -482,7 +487,7 @@ export const RieprechtVideo: React.FC = () => {
         />
       </Sequence>
 
-      <Sequence from={435} durationInFrames={180}>
+      <Sequence from={390} durationInFrames={180}>
         <ProductList
           products={schuettgutProducts}
           bgColor={CREAM}
@@ -491,11 +496,11 @@ export const RieprechtVideo: React.FC = () => {
         />
       </Sequence>
 
-      <Sequence from={615} durationInFrames={90}>
+      <Sequence from={570} durationInFrames={120}>
         <USPs />
       </Sequence>
 
-      <Sequence from={705} durationInFrames={90}>
+      <Sequence from={690} durationInFrames={90}>
         <Outro />
       </Sequence>
     </AbsoluteFill>
