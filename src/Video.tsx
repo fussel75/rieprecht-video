@@ -40,7 +40,6 @@ const Intro: React.FC = () => {
           width: 650,
           transform: `scale(${logoScale})`,
           opacity: logoOpacity,
-          filter: "brightness(0) invert(1)",
         }}
       />
     </AbsoluteFill>
@@ -384,7 +383,6 @@ const Outro: React.FC = () => {
           opacity: logoOpacity,
           transform: `translate(${logoX}px, ${logoY}px) scale(${logoScale})`,
           marginBottom: 30,
-          filter: "brightness(0) invert(1)",
         }}
       />
 
