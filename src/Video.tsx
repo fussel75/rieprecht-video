@@ -34,7 +34,7 @@ const Intro: React.FC = () => {
       }}
     >
       <Img
-        src={staticFile("logo.png")}
+        src={staticFile("rieprecht-logo.svg")}
         style={{
           width: 600,
           transform: `scale(${logoScale})`,
@@ -295,7 +295,7 @@ const Outro: React.FC = () => {
       }}
     >
       <Img
-        src={staticFile("logo.png")}
+        src={staticFile("rieprecht-logo.svg")}
         style={{
           width: 400,
           opacity: s,
