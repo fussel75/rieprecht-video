@@ -471,7 +471,7 @@ const Outro: React.FC = () => {
             marginBottom: 14,
           }}
         >
-          shop.rieprecht-gmbh.de
+          shop24.rieprecht-gmbh.de
         </div>
         <div style={{ fontSize: 30, opacity: 0.8 }}>
           rieprecht-gmbh.de
