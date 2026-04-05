@@ -322,37 +322,50 @@ const USPs: React.FC = () => {
   );
 };
 
-/* ── Scene 7: Outro (3s) – Logo von links oben, wächst ── */
+/* ── Scene 8: Outro (5s / 150 Frames) – Logo + CTA + Kontakt ── */
 const Outro: React.FC = () => {
   const frame = useCurrentFrame();
-  const { fps } = useVideoConfig();
-  const totalFrames = 90;
 
-  // Logo starts small at top-left, grows and moves to center
-  const progress = interpolate(frame, [0, totalFrames - 15], [0, 1], {
+  // Phase 1: Logo flies in from top-left (0–50)
+  const logoProgress = interpolate(frame, [0, 50], [0, 1], {
+    extrapolateRight: "clamp",
+  });
+  const logoX = interpolate(logoProgress, [0, 1], [-300, 0]);
+  const logoY = interpolate(logoProgress, [0, 1], [-600, 0]);
+  const logoScale = interpolate(logoProgress, [0, 1], [0.15, 1]);
+  const logoOpacity = interpolate(frame, [0, 15], [0, 1], {
     extrapolateRight: "clamp",
   });
 
-  const logoX = interpolate(progress, [0, 1], [-300, 0]);
-  const logoY = interpolate(progress, [0, 1], [-600, 0]);
-  const logoScale = interpolate(progress, [0, 1], [0.15, 1]);
-  const logoOpacity = interpolate(frame, [0, 20], [0, 1], {
+  // Phase 2: CTA tagline (30–60)
+  const ctaOpacity = interpolate(frame, [30, 50], [0, 1], {
     extrapolateRight: "clamp",
   });
 
-  // CTA text appears after logo settles
-  const ctaOpacity = interpolate(frame, [totalFrames - 30, totalFrames - 15], [0, 1], {
+  // Phase 3: Subline "Worauf wartest du noch?" (50–70)
+  const sublineOpacity = interpolate(frame, [50, 65], [0, 1], {
     extrapolateRight: "clamp",
   });
-  const ctaPulse = interpolate(
-    Math.sin((frame - totalFrames + 30) * 0.15),
-    [-1, 1],
-    [0.95, 1.05]
-  );
 
-  const contactOpacity = interpolate(frame, [totalFrames - 20, totalFrames - 8], [0, 1], {
+  // Phase 4: Phone number big (65–85)
+  const phoneScale = spring({
+    frame: Math.max(0, frame - 65),
+    fps: 30,
+    config: { damping: 10, mass: 0.8 },
+  });
+  const phoneOpacity = interpolate(frame, [65, 75], [0, 1], {
     extrapolateRight: "clamp",
   });
+
+  // Phase 5: Shop URL + Website (85–105)
+  const urlOpacity = interpolate(frame, [85, 100], [0, 1], {
+    extrapolateRight: "clamp",
+  });
+
+  // Pulsing phone number
+  const phonePulse = frame > 80
+    ? interpolate(Math.sin((frame - 80) * 0.2), [-1, 1], [0.97, 1.03])
+    : 1;
 
   return (
     <AbsoluteFill
@@ -360,48 +373,109 @@ const Outro: React.FC = () => {
         backgroundColor: DARK_GREEN,
         justifyContent: "center",
         alignItems: "center",
-        padding: 60,
+        padding: 50,
       }}
     >
+      {/* Logo */}
       <Img
         src={staticFile("rieprecht-logo.svg")}
         style={{
-          width: 550,
+          width: 450,
           opacity: logoOpacity,
           transform: `translate(${logoX}px, ${logoY}px) scale(${logoScale})`,
-          marginBottom: 40,
+          marginBottom: 30,
           filter: "brightness(0) invert(1)",
         }}
       />
 
+      {/* CTA Headline */}
       <div
         style={{
           fontFamily: "Arial, Helvetica, sans-serif",
           fontWeight: 800,
-          fontSize: 64,
+          fontSize: 58,
           color: CREAM,
           textAlign: "center",
-          transform: `scale(${ctaPulse})`,
-          marginBottom: 50,
+          marginBottom: 10,
           opacity: ctaOpacity,
         }}
       >
-        Jetzt bestellen!
+        Dein Container ist nur
+      </div>
+      <div
+        style={{
+          fontFamily: "Arial, Helvetica, sans-serif",
+          fontWeight: 800,
+          fontSize: 58,
+          color: "#a8d54b",
+          textAlign: "center",
+          marginBottom: 20,
+          opacity: ctaOpacity,
+        }}
+      >
+        einen Anruf entfernt!
       </div>
 
+      {/* Subline */}
       <div
         style={{
           fontFamily: "Arial, Helvetica, sans-serif",
           fontWeight: 600,
-          fontSize: 38,
+          fontSize: 34,
           color: CREAM,
           textAlign: "center",
-          opacity: contactOpacity,
-          lineHeight: 1.8,
+          marginBottom: 40,
+          opacity: sublineOpacity,
+          fontStyle: "italic",
         }}
       >
-        <div>rieprecht-gmbh.de</div>
-        <div>0162-5231470</div>
+        Worauf wartest du noch?
+      </div>
+
+      {/* Phone number – BIG */}
+      <div
+        style={{
+          fontFamily: "Arial, Helvetica, sans-serif",
+          fontWeight: 900,
+          fontSize: 72,
+          color: CREAM,
+          textAlign: "center",
+          backgroundColor: LIGHT_GREEN,
+          borderRadius: 24,
+          padding: "24px 50px",
+          marginBottom: 30,
+          opacity: phoneOpacity,
+          transform: `scale(${phoneScale * phonePulse})`,
+        }}
+      >
+        0162-5231470
+      </div>
+
+      {/* URLs */}
+      <div
+        style={{
+          fontFamily: "Arial, Helvetica, sans-serif",
+          fontWeight: 600,
+          fontSize: 36,
+          color: CREAM,
+          textAlign: "center",
+          opacity: urlOpacity,
+          lineHeight: 2,
+        }}
+      >
+        <div
+          style={{
+            backgroundColor: "rgba(255,255,255,0.15)",
+            borderRadius: 16,
+            padding: "12px 36px",
+            marginBottom: 14,
+          }}
+        >
+          shop.rieprecht-gmbh.de
+        </div>
+        <div style={{ fontSize: 30, opacity: 0.8 }}>
+          rieprecht-gmbh.de
+        </div>
       </div>
     </AbsoluteFill>
   );
@@ -442,8 +516,8 @@ const schuettgutProducts = [
    Scene 5: Schüttgut Head  345–390 (1.5s)
    Scene 6: Schüttgut Prod  390–570 (6s)
    Scene 7: USPs            570–690 (4s)
-   Scene 8: Outro           690–780 (3s)
-   Total: 780 Frames = 26s @ 30fps
+   Scene 8: Outro           690–840 (5s)
+   Total: 840 Frames = 28s @ 30fps
 ── */
 export const RieprechtVideo: React.FC = () => {
   return (
@@ -500,7 +574,7 @@ export const RieprechtVideo: React.FC = () => {
         <USPs />
       </Sequence>
 
-      <Sequence from={690} durationInFrames={90}>
+      <Sequence from={690} durationInFrames={150}>
         <Outro />
       </Sequence>
     </AbsoluteFill>
