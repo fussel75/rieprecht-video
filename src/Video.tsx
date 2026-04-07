@@ -472,7 +472,7 @@ const ContainerReveal: React.FC = () => {
             opacity: sizeOpacity,
           }}
         >
-          Ab 3m³ bis 36m³
+          Von 5m³ bis 10m³
         </div>
 
         <div
@@ -655,7 +655,7 @@ const SplitScreen: React.FC = () => {
               textShadow: "0 3px 15px rgba(0,0,0,0.5)",
             }}
           >
-            Container 3–36m³
+            Container 5–10m³
           </div>
           <div
             style={{
